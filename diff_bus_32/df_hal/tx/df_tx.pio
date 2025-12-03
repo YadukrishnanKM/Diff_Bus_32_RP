@@ -1,0 +1,24 @@
+.program df_tx
+; 32-bit UART TX, LSB first
+; Start bit = low, Stop bit = high
+; 8 PIO cycles per bit (1 + [7])
+
+.wrap_target
+tx_wait:
+    pull block
+    set pindirs, 1         ; drive pin as output
+
+    ; start bit (low). small pre-delay so RX mid-bit lines up
+    set pins, 0 [3]        ; low for 1 bit (3 + instr cycles)
+
+    ; 32 data bits (LSB first)
+    set x, 31
+bitloop:
+    out pins, 1 [7]        ; output 1 bit, hold 1 bit period
+    jmp x-- bitloop
+
+    ; stop bit (high)
+    set pins, 1 [7]        ; high for 1 bit period
+    set pindirs, 0         ; release line to idle (pull-up)
+    jmp tx_wait
+.wrap

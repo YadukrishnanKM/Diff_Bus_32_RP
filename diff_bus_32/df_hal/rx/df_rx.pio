@@ -1,0 +1,20 @@
+.program df_rx
+; 32-bit UART RX, LSB first
+; Start bit = low, Stop bit = high
+; 8 PIO cycles per bit (1 + [7])
+
+.wrap_target
+wait_start:
+    set pindirs, 0           ; ensure pin is input
+    wait 0 pin 0             ; wait for start bit (falling edge)
+    nop [4]                  ; ~half-bit delay - tune 3..6 as needed
+    set x, 31                ; prepare to read 32 bits
+
+bitloop:
+    in pins, 1 [7]           ; sample one bit every 8 cycles
+    jmp x-- bitloop
+
+    push block               ; push 32-bit word
+    wait 1 pin 0             ; ensure line is high before continuing
+    jmp wait_start
+.wrap

@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stdlib.h": "c",
+        "diff_bus_hal.h": "c",
+        "pio.h": "c",
+        "df_rx.h": "c"
+    }
+}
