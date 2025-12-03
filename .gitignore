@@ -1,1 +1,4 @@
-./build
+build
+main.cpp
+main_document_merged.pdf
+CMakeLists.txt
